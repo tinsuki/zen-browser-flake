@@ -1,4 +1,4 @@
-WWW{
+ {
   description = "Zen Browser";
 
   inputs = {
