@@ -173,7 +173,7 @@ fi
 if ! git status | grep -q "nothing to commit"; then
   git add flake.nix
   git commit -m "Update flake.nix for Zen Browser from $local_version to $zen_version"
-  git push origin dev
+  git push
   if [ $quiet -eq 0 ]; then
     echo "Update pushed to GitHub."
   fi
