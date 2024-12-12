@@ -1,6 +1,7 @@
 quiet=0
 dry_run=0
 verbose=0
+as_cron=0
 
 help () {
   echo "Usage: updater.sh [options]"
@@ -9,6 +10,7 @@ help () {
   echo "  -d, --dry-run  Run in dry-run mode"
   echo "  -v, --verbose  Run in verbose mode"
   echo "  -h, --help     Display this help message"
+
 }
 
 for arg in "$@"; do
@@ -29,12 +31,42 @@ for arg in "$@"; do
       help
       exit 0
       ;;
+    -c |--cron)
+      as_cron=1
+      shift
+      ;;
     *)
       echo "Invalid option: $arg"
       help
       exit 1
   esac
 done
+
+
+if [ $as_cron -eq 1 ]; then
+  # launch a cron job to run the script every 24 hours
+  # add the following line to the crontab file
+  # 0 0 * * * /path/to/updater.sh -q
+  if [ $quiet -eq 0 ]; then
+    echo "Creating cron job to check for updates every 24 hours"
+  fi
+
+  if command -v crontab > /dev/null; then
+    if [ $quiet -eq 0 ]; then
+      echo "crontab is installed"
+    fi
+  else
+    if [ $quiet -eq 0 ]; then
+      echo "crontab is not installed, exiting..."
+    fi
+    exit 1
+  fi
+
+  croncmd="/path/to/updater.sh -q"
+  cronjob="0 0 * * * $croncmd"
+  (crontab -l ; echo "$cronjob") | crontab -
+  exit 0
+fi
 
 # verify that nix-prefetch-url can be used to download the source
 if command -v nix-prefetch-url > /dev/null; then
@@ -54,22 +86,14 @@ fi
 
 if [ $quiet -eq 0 ]; then
   echo "#####"
-  echo "Step 1: Checking Zen Browser version from Git"
+  echo "Step 1: Checking Zen Browser version from GitHub.com"
   echo "#####"
 fi
 
 
-if ! test -d desktop; then
-  git clone https://github.com/zen-browser/desktop.git
-fi
-
-cd desktop || { echo "Error: desktop directory not found"; exit 1; }
-
-git fetch --all
-git checkout dev
-git pull
-
-zen_version=$(git describe --tags --abbrev=0)
+# Fetch the latest version from GitHub releases page
+page_content=$(curl -s https://github.com/zen-browser/desktop/releases)
+zen_version=$(echo "$page_content" | grep -Po 'zen-browser/desktop/releases/tag/\K[0-9]+\.[0-9]+\.[0-9]+-b\.[0-9]+' | head -n 1)
 
 if [ $quiet -eq 0 ]; then
   echo "Zen version from Git: $zen_version"
@@ -78,8 +102,6 @@ if [ $quiet -eq 0 ]; then
   echo "Step 2: Checking Zen Browser version locally"
   echo "#####"
 fi
-
-cd .. || exit 1
 
 if ! test -f flake.nix; then
   echo "Error: flake.nix not found"
@@ -113,7 +135,7 @@ if [ $quiet -eq 0 ]; then
 fi
 
 # Fetch the latest source hash
-specsha=$(nix-prefetch-url --unpack https://github.com/zen-browser/desktop/releases/download/$zen_version/zen.linux-generic.tar.bz2)
+specsha=$(nix-prefetch-url --unpack https://github.com/zen-browser/desktop/releases/download/$zen_version/zen.linux-specific.tar.bz2)
 gensha=$(nix-prefetch-url --unpack https://github.com/zen-browser/desktop/releases/download/$zen_version/zen.linux-generic.tar.bz2)
 
 if [ $verbose -eq 1 ]; then
