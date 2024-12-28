@@ -74,9 +74,6 @@
 	      };
     in
     {
-      packages."${system}" = {
-        linux_x86_64 = mkZen { };
-	default = self.packages."${system}".linux_x86_64;
-      };
+      packages."${system}" = mkZen { };
     };
 }
