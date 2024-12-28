@@ -10,10 +10,8 @@
       system = "x86_64-linux";
       version = "$version";
       downloadUrl = {
-		"linux_x64_86" = {
-			url = "https://github.com/zen-browser/desktop/releases/download/$version/zen.linux-x86_64.tar.bz2";
-			sha256 = "$sha";
-		};
+		url = "https://github.com/zen-browser/desktop/releases/download/$version/zen.linux-x86_64.tar.bz2";
+		sha256 = "$sha";
       };
 
       pkgs = import nixpkgs {
@@ -31,9 +29,9 @@
 	libXfixes libXScrnSaver
       ]);
 
-      mkZen = { variant }: 
+      mkZen = { }: 
         let
-	  downloadData = downloadUrl."${variant}";
+	  downloadData = downloadUrl;
 	in
              pkgs.stdenv.mkDerivation {
     inherit version;
@@ -77,8 +75,8 @@
     in
     {
       packages."${system}" = {
-        linux_x64_86 = mkZen { variant = "linux_x64_86"; };
-	default = self.packages."${system}".linux_x64_86;
+        linux_x86_64 = mkZen { };
+	default = self.packages."${system}".linux_x86_64;
       };
     };
 }
