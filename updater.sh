@@ -135,12 +135,11 @@ if [ $quiet -eq 0 ]; then
 fi
 
 # Fetch the latest source hash
-specsha=$(nix-prefetch-url --unpack https://github.com/zen-browser/desktop/releases/download/$zen_version/zen.linux-specific.tar.bz2)
-gensha=$(nix-prefetch-url --unpack https://github.com/zen-browser/desktop/releases/download/$zen_version/zen.linux-generic.tar.bz2)
+
+specsha=$(nix-prefetch-url --unpack https://github.com/zen-browser/desktop/releases/download/$zen_version/zen.linux-x86_64.tar.bz2)
 
 if [ $verbose -eq 1 ]; then
-  echo "Specific hash: $specsha"
-  echo "Generic hash: $specsha"
+  echo "SHA256 hash: $specsha"
 fi
 
 # Update flake.nix using a template
@@ -148,8 +147,7 @@ fi
 mv flake.nix flake.nix.bak
 cp template flake.nix
 sed -i 's/$version/'"$zen_version"'/g' flake.nix
-sed -i 's/$specsha/'"$specsha"'/g' flake.nix
-sed -i 's/$gensha/'"$gensha"'/g' flake.nix
+sed -i 's/$sha/'"$specsha"'/g' flake.nix
 
 if [ $verbose -eq 1 ]; then
   diff flake.nix.bak flake.nix
