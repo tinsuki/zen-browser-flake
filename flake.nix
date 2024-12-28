@@ -10,10 +10,10 @@
       system = "x86_64-linux";
       version = "1.0.2-b.5";
       downloadUrl = {
-        "linux_x64_86" = {
-	  url = "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-specific.tar.bz2"; # https://github.com/zen-browser/desktop/releases/download/1.0.2-b.5/zen.linux-specific.tar.bz2
-	  sha256 = "1xp0z86l7z661cwckgr623gwwjsy3h66900xqjq6dvgx5a3njbxi";
-	};
+		"linux_x64_86" = {
+			url = "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-specific.tar.bz2"; # https://github.com/zen-browser/desktop/releases/download/1.0.2-b.5/zen.linux-specific.tar.bz2
+			sha256 = "1xp0z86l7z661cwckgr623gwwjsy3h66900xqjq6dvgx5a3njbxi";
+		};
       };
 
       pkgs = import nixpkgs {
@@ -78,7 +78,7 @@
     {
       packages."${system}" = {
         linux_x64_86 = mkZen { variant = "linux_x64_86"; };
-	default = self.packages."${system}".specific;
+	default = self.packages."${system}".linux_x64_86;
       };
     };
 }
