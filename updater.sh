@@ -93,7 +93,7 @@ fi
 
 # Fetch the latest version from GitHub releases page
 page_content=$(curl -s https://github.com/zen-browser/desktop/releases)
-zen_version=$(echo "$page_content" | grep -Po 'zen-browser/desktop/releases/tag/\K[0-9]+\.[0-9]+\.[0-9]+-b\.[0-9]+' | head -n 1)
+zen_version=$(echo "$page_content" | grep -Po 'zen-browser/desktop/releases/tag/\K(\d+(\.\d+)*)\.?-?b(\.\d+(\.\d+)*)?' | head -n 1)
 
 if [ $quiet -eq 0 ]; then
   echo "Zen version from Git: $zen_version"
