@@ -136,7 +136,7 @@ fi
 
 # Fetch the latest source hash
 
-specsha=$(nix-prefetch-url --unpack https://github.com/zen-browser/desktop/releases/download/$zen_version/zen.linux-x86_64.tar.bz2)
+specsha=$(nix-prefetch-url --unpack https://github.com/zen-browser/desktop/releases/download/$zen_version/zen.linux-x86_64.tar.xz)
 
 if [ $verbose -eq 1 ]; then
   echo "SHA256 hash: $specsha"
