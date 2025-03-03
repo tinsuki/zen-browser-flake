@@ -8,10 +8,10 @@
   outputs = { self, nixpkgs }:
     let
       system = "x86_64-linux";
-      version = "1.8.1b";
+      version = "1.8.2b";
       downloadUrl = {
-		url = "https://github.com/zen-browser/desktop/releases/download/1.8.1b/zen.linux-x86_64.tar.xz";
-		sha256 = "1f52qsqp7p1n601m3k8ra3xivssasfld620xf59afx23wkvz6n3j";
+		url = "https://github.com/zen-browser/desktop/releases/download/1.8.2b/zen.linux-x86_64.tar.xz";
+		sha256 = "0lqsspqnrp2v6ca6yacx7aq6afqr092q60aas1q6p7p15ky9ip7i";
       };
 
       pkgs = import nixpkgs {
